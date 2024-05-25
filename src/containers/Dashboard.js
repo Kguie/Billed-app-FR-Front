@@ -93,6 +93,7 @@ export default class {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
       })
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
+   
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++
@@ -145,7 +146,8 @@ export default class {
       this.counter ++
     }
 
-    bills.forEach(bill => {
+    //Correction de l'ajout de l'event listener qui ne se fait que sur les factures qui viennent d'être ouverte
+    filteredBills(bills, getStatus(this.index)).forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
