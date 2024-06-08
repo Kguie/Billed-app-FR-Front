@@ -1,5 +1,6 @@
 import { ROUTES_PATH } from "../constants/routes.js";
 import Logout from "./Logout.js";
+import { imageFilter } from "../app/imageFilter.js";
 
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
@@ -24,10 +25,10 @@ export default class NewBill {
     const filePath = e.target.value.split(/\\/g);
 
     //Vérifie le type du fichier
-    const fileTypes = ["image/jpeg", "image/jpg", "image/png"];
-    if (!(file && fileTypes.includes(file.type))) {
+    if (!imageFilter(file)) {
       alert("Veuillez sélectionner un fichier au format JPG, JPEG ou PNG.");
       e.target.value = ""; // Reset
+      return;
     }
     const fileName = filePath[filePath.length - 1];
     const formData = new FormData();
