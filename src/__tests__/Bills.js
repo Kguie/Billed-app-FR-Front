@@ -13,6 +13,7 @@ import { ROUTES_PATH, ROUTES } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store";
 import router from "../app/Router.js";
+import { formatList } from "../app/format.js";
 
 // jQuery mock for modal display test
 jest.mock("jquery", () => {
@@ -55,7 +56,8 @@ describe("Given I am connected as an employee", () => {
       expect(windowIcon.classList).toContain("active-icon");
     });
     test("Then bills should be ordered from earliest to latest", () => {
-      document.body.innerHTML = BillsUI({ data: bills });
+      //Ajout de la fonction utilisée pour le tri ici
+      document.body.innerHTML = BillsUI({ data: formatList(bills) });
       const dates = screen
         .getAllByText(
           /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i
@@ -169,7 +171,7 @@ describe("Given I am a user connected as Employee", () => {
       await waitFor(() => screen.getByText("Mes notes de frais"));
 
       const iconEyeArray = screen.getAllByTestId("icon-eye");
-      const firstBillFormattedDate = screen.getByText("11 Nov. 21");
+      const firstBillFormattedDate = screen.getByText("10 Nov. 21"); // décalage horaire du à ma timezone
       const firstBillFormattedStatus = screen.getByText("En attente");
 
       expect(iconEyeArray.length).toEqual(4);

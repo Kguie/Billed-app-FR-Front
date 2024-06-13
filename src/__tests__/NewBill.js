@@ -174,63 +174,63 @@ describe("Given I am a user connected as Employee", () => {
         router();
       });
 
-      // test("fetches messages from an API and fails with 500 message error", async () => {
-      //   document.body.innerHTML = NewBillUI();
-      //   mockStore.bills.mockImplementationOnce(() => {
-      //     return {
-      //       update: () => {
-      //         return Promise.reject(new Error("Erreur 500"));
-      //       },
-      //     };
-      //   });
+      test("fetches messages from an API and fails with 500 message error", async () => {
+        document.body.innerHTML = NewBillUI();
+        const expenseName = screen.getByTestId("expense-name");
+        fireEvent.change(expenseName, { target: { value: "Vol test" } });
 
-      //   const expenseName = screen.getByTestId("expense-name");
-      //   fireEvent.change(expenseName, { target: { value: "Vol test" } });
+        const datePicker = screen.getByTestId("datepicker");
+        fireEvent.change(datePicker, { target: { value: "2024-01-01" } });
 
-      //   const datePicker = screen.getByTestId("datepicker");
-      //   fireEvent.change(datePicker, { target: { value: "2024-01-01" } });
+        const amount = screen.getByTestId("amount");
+        fireEvent.change(amount, { target: { value: 500 } });
 
-      //   const amount = screen.getByTestId("amount");
-      //   fireEvent.change(amount, { target: { value: 500 } });
+        const pct = screen.getByTestId("pct");
+        fireEvent.change(pct, { target: { value: 100 } });
 
-      //   const pct = screen.getByTestId("pct");
-      //   fireEvent.change(pct, { target: { value: 100 } });
+        const fileInput = screen.getByTestId("file");
+        const imageFile = new File(["invoice"], "invoice.jpeg", {
+          type: "image/jpeg",
+        });
+        userEvent.upload(fileInput, imageFile);
 
-      //   const fileInput = screen.getByTestId("file");
-      //   const imageFile = new File(["invoice"], "invoice.jpeg", {
-      //     type: "image/jpeg",
-      //   });
-      //   userEvent.upload(fileInput, imageFile);
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname });
+        };
+        Object.defineProperty(window, "localStorage", {
+          value: localStorageMock,
+        });
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({
+            type: "Employee",
+          })
+        );
+        const newBill = new NewBill({
+          document: document,
+          onNavigate: onNavigate,
+          store: mockStore,
+          localStorage: localStorageMock,
+        });
 
-      //   const onNavigate = (pathname) => {
-      //     document.body.innerHTML = ROUTES({ pathname });
-      //   };
-      //   Object.defineProperty(window, "localStorage", {
-      //     value: localStorageMock,
-      //   });
-      //   window.localStorage.setItem(
-      //     "user",
-      //     JSON.stringify({
-      //       type: "Employee",
-      //     })
-      //   );
-      //   const newBill = new NewBill({
-      //     document: document,
-      //     onNavigate: onNavigate,
-      //     store: mockStore,
-      //     localStorage: localStorageMock,
-      //   });
+        mockStore.bills.mockImplementationOnce(() => {
+          return {
+            update: () => {
+              return Promise.reject(new Error("Erreur 500"));
+            },
+          };
+        });
+        const form = screen.getByTestId("form-new-bill");
+        const handleSubmit = jest.fn(newBill.handleSubmit);
 
-      //   const form = screen.getByTestId("form-new-bill");
-      //   const handleSubmit = jest.fn(newBill.handleSubmit);
+        form.addEventListener("submit", handleSubmit);
+        fireEvent.submit(form);
 
-      //   form.addEventListener("submit", handleSubmit);
-      //   fireEvent.submit(form);
-
-      //   await new Promise(process.nextTick);
-      //   const message = screen.getByText(/Erreur/);
-      //   expect(message).toBeTruthy();
-      // });
+        // await new Promise(process.nextTick);
+        await waitFor(() => screen.getByText(/Erreur/));
+        const message = screen.getByText(/Erreur/);
+        expect(message).toBeTruthy();
+      });
     });
   });
 });
