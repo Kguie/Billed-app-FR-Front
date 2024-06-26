@@ -150,7 +150,7 @@ describe("Given I am connected as an employee", () => {
 // test d'intégration GET
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills", () => {
-    test("fetches and displays bills ", async () => {
+    test("Then fetches and displays bills ", async () => {
       // jest.spyOn(mockStore, "bills");
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
@@ -198,7 +198,7 @@ describe("Given I am a user connected as Employee", () => {
         document.body.appendChild(root);
         router();
       });
-      test("fetches bills from an API and fails with 404 message error", async () => {
+      test("Then fetches bills from an API and fails with 404 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {
             list: () => {
@@ -212,7 +212,7 @@ describe("Given I am a user connected as Employee", () => {
         expect(message).toBeTruthy();
       });
 
-      test("fetches messages from an API and fails with 500 message error", async () => {
+      test("Then fetches messages from an API and fails with 500 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {
             list: () => {
